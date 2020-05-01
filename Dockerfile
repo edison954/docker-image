@@ -2,5 +2,12 @@ FROM centos
 
 RUN yum install httpd -y
 
-COPY Bell /var/www/html/
+WORKDIR /var/www/html/
+
+COPY Bell .
+
+ENV contenido prueba
+
+RUN echo "$contenido" > /var/www/html/prueba.html
+
 CMD apachectl -D FOREGROUND
