@@ -1,15 +1,23 @@
 FROM centos
 
+LABEL version=1.0
+LABEL description="this is a apache image"
+LABEL vendor="yo naranjas"
+
 RUN yum install httpd -y
 
-WORKDIR /var/www/html/
+COPY Bell /var/www/html/
 
-COPY Bell .
+RUN echo "$(whoami)" > /var/www/html/user1.html
 
-ENV contenido prueba
+RUN useradd edison
 
-RUN echo "$contenido" > /var/www/html/prueba.html
+USER edison
 
-EXPOSE 81
+RUN echo "$(whoami)" > /tmp/user2.html
+
+USER root
+
+RUN cp /tmp/user2.html /var/www/html/user2.html
 
 CMD apachectl -D FOREGROUND
