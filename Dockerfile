@@ -1,25 +1,27 @@
-FROM centos
-
-LABEL version=1.0
-LABEL description="this is a apache image"
-LABEL vendor="yo naranjas"
-
-RUN yum install httpd -y
-
-COPY Bell /var/www/html/
-
-RUN echo "$(whoami)" > /var/www/html/user1.html
+FROM nginx
 
 RUN useradd edison
 
+COPY fruit /usr/share/nginx/html/
+
+ENV archivo docker
+
+WORKDIR /usr/share/nginx/html/
+
+RUN echo "$archivo" > /usr/share/nginx/html/env.html
+
+EXPOSE 90
+
+LABEL version=1
+
 USER edison
 
-RUN echo "$(whoami)" > /tmp/user2.html
+RUN echo "yo soy $(whoami)" > /tmp/yo.html
 
 USER root
 
-RUN cp /tmp/user2.html /var/www/html/user2.html
+RUN cp /tmp/yo.html /usr/share/nginx/html/docker.html
 
-COPY run.sh /run.sh
+VOLUME /var/log/nginx
 
-CMD sh /run.sh
+CMD nginx -g 'daemon off;'
