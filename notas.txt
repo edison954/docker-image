@@ -1,0 +1,151 @@
+
+CONTENEDOR DE MYSQL
+docker run -d -p 3333:3306 --name my-db2 -e "MYSQL_ROOT_PASSWORD=12345678" -e "MYSQL_DATABASE=docker-db" -e "MYSQL_USER=docker-user" -e "MYSQL_PASSWORD=87654321"  mysql
+
+ELIMINAR TODOS LOS CONTENEDORES
+
+docker rm -fv $(docker ps -aq)
+docker ps -q | xargs docker rm -f
+
+
+MONGO
+docker pull mongo
+docker run -d --name my-mongo -p 27017:27017 mongo
+
+VER CONSUMO DE RECURSOS
+docker stats my-mongo
+
+VER LOGS
+docker logs -f my-mongo
+
+
+IMAGENES DE NGINX, APACHE, TOMCAT, POSTGRES
+
+docker run -d -p 8888:80 --name nginx nginx
+docker run -d -p 9999:80 --name apache httpd
+docker pull tomcat:9.0.8-jre8-alpine
+docker run -d -p 7070:8080 --name my-tomcat tomcat:9.0.8-jre8-alpine
+
+docker pull postgres
+docker run -d --name postgres -e "POSTGRES_PASSWORD=12345678" -e "POSTGRES_USER=docker-user" -e "POSTGRES_DB=docker-db" -p 5432:5432 postgres
+
+INGRESAR A LA BD DE POSTGRESS
+docker exec -ti postgres bash
+psql -d docker-db -U docker-user
+SALIR
+\q
+
+\l    --> lista las bds creadas
+
+JENKINS
+docker pull jenkins
+docker run -d -p 7070:8080 --name jenkins jenkins
+
+docker ps -l    --> ultimo contenedor creado
+
+INGRESAR A LA CONSOLA
+docker exec -ti jenkins bash
+cat /var/jenkins_home/secrets/initialAdminPassword
+
+
+NGROK https://dashboard.ngrok.com/get-started/setup
+./ngrok http 80
+
+msThirdParty
+docker build --tag krakend-edison -f .docker/Dockerfile .
+docker run -d -p 8080:8080 --name krakend krakend-edison
+
+
+KAFKA https://kafka.apache.org/quickstart
+producer
+bin/kafka-console-producer.sh --bootstrap-server localhost:9092 --topic test
+ 
+consumer
+bin/kafka-console-consumer.sh --bootstrap-server qakafka.siigo.com:9094 --topic test --from-beginning
+
+
+
+https://qak8s.siigo.com/api/StaticParameters/columnsThirdParty
+https://kafka.apache.org/quickstart
+
+
+ADMINISTRACION DE USUARIOS
+docker build -t centos:prueba .
+docker run -d -ti --name prueba centos:prueba
+docker exec -ti prueba bash
+whoami
+docker exec -u edison  -ti prueba2 bash  --> para ingresar con un usuario especifico al container
+docker exec -u root  -ti prueba1 bash
+docker rm -fv $(docker ps -aq)    --> eliminar todos los contenedores
+
+LIMITAR RECURSOS A UN CONTENEDOR
+
+docker run -d --name mongo -p 27018:27017 mongo
+docker run --help | grep memo
+docker run -d -m "500mb" --name mongo2 -p 27019:27017 mongo
+docker stats mongo2
+
+grep "model name" /proc/cpuinfo   --> ver procesadores el equipo
+grep "model name" /proc/cpuinfo | wc -l
+
+docker run --help | grep cpu
+docker run -d -m "500mb" --cpuset-cpus 0-1  --name mongo4 -p 27021:27017 mongo    --> usa la cpu 0 y la cpu 1
+
+COPIAR ARCHIVOS A UN CONTENEDOR
+docker run -d --name apache httpd
+docker cp index.html apache:/tmp   --> copiar archivos desde fuera del contenedor hacia el contenedor o visebersa
+docker exec -ti apache bash
+cd /tmp/
+ls -l
+pwd  --> ver path donde estamos
+docker cp index.html apache:/usr/local/apache2/htdocs/index.html
+
+docker exec -ti apache bash   
+cd /var/log/                        --> a la inversa
+cat dpkg.log 
+docker cp apache:/var/log/dpkg.log .
+
+CONVERTIR UN CONTENEDOR EN UNA IMAGEN
+docker build -t centos-test .
+docker run -dti --name centos centos-test
+docker exec -ti centos bash                     -->Ingresar al contenedor
+touch file1.txt                 --> crear archivo
+docker commit centos centos-resultante
+docker images
+docker rm -fv centos
+docker run -dti --name centos centos-resultante
+docker run -dti --name centos centos-resultante bash
+
+todo lo que este en un VOLUME no se va a persistir cuando se haga un: docker commit  todo lo demas siigo
+
+SOBREESCRIBIR EL CMD DE UNA IMAGEN SIN UN Dockerfile
+docker run -dti centos
+docker run -dti centos echo hola mundo   --> el ultimo arg debe ser el nombre de la imagen, todo lo demas lo toma como cmd
+docker logs nifty_cohen
+docker run -d -p 8080:8080 centos python -m SimpleHTTPserver 8080
+
+AUTODESTRUIR CONTENEDORES
+docker run -dti --name centos centos
+docker exec -ti centos bash
+cat /etc/profile
+docker rm -fv centos
+
+docker run --rm -ti --name centos centos bash   --> al salise del bash del contendor este automaticament se destruye
+
+CAMBIAR EL DOCUMENTROOT DE docker
+docker info | grep -i root
+sudo sudo
+cd /var/lib/docker
+vi /lib/systemd/system/docker.service           --> editar archivo de configuracion de docker
+systemctl daemon-reload
+systemctl restart docker
+
+sudo systemctl stop docker          --> detener servicio de docker
+
+rm -rf /opt/*                               -->eliminar archivos
+
+
+
+
+
+

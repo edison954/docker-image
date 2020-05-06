@@ -1,7 +1,7 @@
 FROM centos
 
-RUN echo "hola" > /tmp/hola && echo hola >> /tmp/hola1
+ENV prueba 1234
 
-RUN echo "bye" > /tmp/bye1
+RUN useradd edison
 
-RUN echo "test" > /tmp/test1
+#USER edison
