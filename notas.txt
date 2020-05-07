@@ -146,6 +146,92 @@ rm -rf /opt/*                               -->eliminar archivos
 
 
 
+VOLUMENES
+permiten almacenar data persistente del contenedor
+-host  -> usan una carpeta en el contenedor
+-anonymous   -> no definimos una carpeta pero docker automaticamente la genera randomicamente
+-named volumes   -> los creamos no son carpetas nuestras, son adminsitradas por docker si tienen un nombre
+
+VOLUMENES DE HOST
+docker run -d -p 3306:3306 --name my-db -e "MYSQL_ROOT_PASSWORD=12345678" -e "MYSQL_DATABASE=docker-db" -e "MYSQL_USER=docker-user" -e "MYSQL_PASSWORD=87654321"  mysql 
+docker logs -f my-db
+mysql -u root -p
+12345678
+mysql -u root -h 127.0.0.1 -p
+mysqldump -u root -h 127.0.0.1 -p12345678 sys > dump.sql            -generar bkup
+mysql -u root -h 127.0.0.1 -p docker-db < dump.sql                  -importar desde el bkup anterior
+mysql -u root -h 127.0.0.1 -p docker-db
+show tables
 
 
+Volumenes para indicarle a docker que cuando borre el contenedor me mantenga la informacion que tengo en ellos
 
+VOLUMEN DE HOST
+docker run -d -p 3306:3306 --name my-db -e "MYSQL_ROOT_PASSWORD=12345678" -e "MYSQL_DATABASE=docker-db" -e "MYSQL_USER=docker-user" -e "MYSQL_PASSWORD=87654321" -v /opt/mysql/:/var/lib/mysql  mysql 
+
+VOLUMEN ANONIMO
+docker run -d -p 3306:3306 --name my-db -e "MYSQL_ROOT_PASSWORD=12345678" -e "MYSQL_DATABASE=docker-db" -e "MYSQL_USER=docker-user" -e "MYSQL_PASSWORD=87654321" -v /var/lib/mysql  mysql 
+docker info | grep -i root
+
+VOLUMEN NOMBRADO
+dentro de un DockerFile
+
+docker volume ls
+docker build -t test-vol -f Dockerfile2 .
+docker run -dti --name test test-vol
+docker volume ls
+docker exec -ti test bash
+cd /opt/
+touch file1.txt
+exit
+docker ps
+docker info | grep -i root
+cd /var/lib/docker
+sudo su
+cd /var/lib/docker
+
+docker info | grep -i root              -> ver ruta de docker y volumenes
+
+docker volume rm 17046e9eebc1f00c23b86a5d49f1eb9587c12fdf2cdfe59176edbd8f3bd60a99   -> eliminar Volumenes
+
+
+VOLUEMEN NOMBRADO
+docker volume create mysql-data         -> crear volumen
+docker volume ls                        -> listar volumen
+docker volume rm mysql-data             -> eliminar volumen
+
+usar volumen
+
+docker volume create my-volume
+docker volume ls
+docker run -d -p 3306:3306 --name my-db -e "MYSQL_ROOT_PASSWORD=12345678" -e "MYSQL_DATABASE=docker-db" -e "MYSQL_USER=docker-user" -e "MYSQL_PASSWORD=87654321" -v my-volume:/var/lib/mysql  mysql 
+
+DANGLING VOLUMES
+docker volume ls -f dangling=true
+docker volume ls -f dangling=true -q        -> recuperar los initialAdminPassword
+docker volume ls -f dangling=true -q | xargs docker volume rm           -> eliminarlos todos
+
+
+docker volume rm my-volume
+
+IMAGEN DE MONGO CON VOLUMEN EN DISCO DEL PC
+
+docker run -d -p 27018:27017 -v /d/docker/volumes/mongo/:/data/db mongo
+docker exec -ti gifted_bartik bash
+
+use mydb
+WriteResult({ "nInserted" : 1 })
+show dbs
+
+docker run -d -p 27018:27017 --name mongo -v /d/docker/volumes/mongo/:/data/db mongo
+docker exec -ti mongo bash
+
+docker run -d -p 27018:27017 --name mongo -v "D:\docker\volumes\mongo":/data/db mongo
+
+docker run -d -p 7070:8080 --name jenkins -v /d/docker/volumes/jenkis/:/var/jenkins_home jenkins 
+
+
+INGRESAR AL CONTENEDOR SIN ACCEDER A LA CONSOLA DE JENKINS
+docker exec jenkins bash -c "cat /var/jenkins_home/secrets/initialAdminPassword"
+
+COMPARTIR VOLUMENES EN VARIOS CONTENEDORES
