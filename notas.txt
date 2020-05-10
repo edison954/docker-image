@@ -235,3 +235,109 @@ INGRESAR AL CONTENEDOR SIN ACCEDER A LA CONSOLA DE JENKINS
 docker exec jenkins bash -c "cat /var/jenkins_home/secrets/initialAdminPassword"
 
 COMPARTIR VOLUMENES EN VARIOS CONTENEDORES
+
+
+REDES
+RED POR DEFECTO
+ip a | grep docker
+redo por defecto docker0
+
+docker run -d nginx
+docker ps
+docker inspect busy_boyd
+
+MIRAR LA RED POR DEFECTO
+docker network ls
+docker network ls | grep bridge
+docker network inspect bridge
+
+docker inspect busy_boyd | grep bridge -C 5
+
+si creamos contenedores pero no definimos la red, se van a ir adjuntando a la red bridge
+
+ping desde contenedor 1 a contenedor 2
+docker exec quirky_jones bash -c "ping 172.17.0.2"
+
+CREAR UNA RED
+docker network
+docker network create test-network
+docker network ls
+docker network ls | grep test
+docker network create --help
+
+docker network create -d bridge --subnet 172.124.10.0/24 --gateway 172.124.10.1 docker-test-network
+docker network ls | grep docker-test
+docker network inspect docker-test-network
+
+docker network inspect docker-test-network|less
+
+docker run --network docker-test-network -d --name test2 -ti centos
+docker inspect test2
+
+por ejemplo contenedor1 webserver, contenedor2 bds
+docker run --network docker-test-network -d --name cont1 -ti centos        
+docker run --network docker-test-network -d --name cont2 -ti centos
+docker exec cont1 bash -c "ping 172.124.10.4"
+docker exec cont2 bash -c "ping 172.124.10.3"
+
+en redes definidas por el usuario si se pueden ver los contenedores por nombre
+docker exec cont2 bash -c "ping cont1"
+docker exec cont1 bash -c "ping cont2"
+
+docker run --network test-network -d --name cont3 -ti centos
+docker exec cont2 bash -c "ping cont3"   --> no hace ping porque estan en redes diferentes
+
+CONECTAR CONTENEDORES EN DISTINTAS REDES
+docker network connect docker-test-network cont3        --> le adjunta la red docker-test-network al cont3 que solo tenia la red test-network
+docker inspect cont3
+docker exec cont1 bash -c "ping cont3"      --> si funciona
+
+DESCONECTAR CONTENEDOR DE UNA RED ASOCIADA
+docker network disconnect docker-test-network cont3
+docker exec cont3 bash -c "ping cont1"      -> ya no funciona
+
+ELIMINAR REDES
+docker rm -fv cont1
+docker rm -fv cont2
+docker network rm docker-test-network 
+docker network ls | grep docker-test
+
+ASIGNAR UNA IP A UN CONTENEDOR
+docker network create --subnet 172.128.10.0/24 --gateway 172.128.10.1 -d bridge my-net
+docker network inspect my-net
+docker run --network my-net -d --name nginx1 -ti centos
+docker inspect nginx1       --> se crea con una ip al azar dentro de la red
+docker run --network my-net --ip 172.128.10.50  -d --name nginx2 -ti centos  --> le define una ip
+docker inspect nginx2
+
+USAR LA RED DEL HOST  (PC)
+docker run --network host -d --name test2 -ti centos
+docker exec -ti test2 bash
+hostname
+exit
+
+docker exec -ti test2 bash
+yum -y install net-tools
+ifconfig
+
+RED NONE            --> para que los contenedores no tengan red
+docker network ls | grep none
+docker run --network none --name hola -d -ti centos
+docker inspect hola
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
