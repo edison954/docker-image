@@ -326,6 +326,8 @@ docker run --network none --name hola -d -ti centos
 docker inspect hola
 
 
+docker run -d -p 8080:80 nginx
+docker run -d -p 127.0.0.1:8081:80 nginx   --> restringir la ip por la cual se puede acceder
 
 
 
