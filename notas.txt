@@ -402,7 +402,28 @@ docker exec -ti mysql bash
 env
 
 
+VOLUMENES EN DOCKER COMPOSE
+(nombrados, anonymous y de host)
+solo se veran nombrados y de host
 
+
+version: "3"
+services:
+  web:
+    container_name: nginx1
+    ports:
+      - "8080:80"
+    volumes:
+      - "vol2:/usr/share/nginx/html"
+    image: nginx
+volumes:
+  vol2:
+
+--------------
+docker info | grep -i root          --> ver la ruta de docker en el equipo
+
+/var/lib/docker  en windows es:
+C:\Users\Public\Documents\Hyper-V\Virtual hard disks
 
 
 
