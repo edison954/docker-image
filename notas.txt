@@ -609,3 +609,14 @@ docker-compose up -d
 docker ps
 
 watch -d docker ps
+
+PERSONALIZAR EL NOMBRE DE TU PROYECTO EN COMPOSE
+cat docker-compose-cmd.yml
+docker-compose -f docker-compose-cmd.yml up -d
+
+
+PREFIJO EN EN LOS NOMBRES DE LOS RECURSOS CREADOS (RED,VOLUMENES)  -p proyecto
+docker-compose -p webtest  -f docker-compose-vol.yml up -d
+docker-compose -p webtest  -f docker-compose-vol.yml down
+
+
