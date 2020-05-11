@@ -329,6 +329,49 @@ docker inspect hola
 docker run -d -p 8080:80 nginx
 docker run -d -p 127.0.0.1:8081:80 nginx   --> restringir la ip por la cual se puede acceder
 
+DOCKER COMPOSE
+docker compose install              -> en google
+docker-compose              -> ya viene instalado en doker desktop
+
+mkdir docker-compose
+cd docker-compose/
+
+archivos con extencion .yml
+code docker-compose.yml
+
+cuatro partes del archivo .yml
+version:
+services:
+volumes:
+networks:
+
+versions y service son obligatorios
+volumes y networks opcionales
+
+docker run -d --name nginx -p 80:80 nginx
+
+esto es lo mismo que en yml:
+
+version: "3"
+services:
+  web:
+    container_name: nginx1
+    ports:
+      - "8080:80"
+    image: nginx
+
+------ subir contenedor a partir del yml
+docker-compose up -d
+------ eliminar lo creado en yml
+docker-compose down
+
+
+
+
+
+
+
+
 
 
 
