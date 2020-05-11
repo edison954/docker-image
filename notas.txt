@@ -366,6 +366,27 @@ docker-compose up -d
 docker-compose down
 
 
+VARIABLES DE ENTORNO
+
+version: "3"
+services:
+  bd:
+    image: mysql:5.7
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    environment:
+      - "MYSQL_ROOT_PASSWORD=12345678"
+
+------------
+docker-compose up -d
+docker exec -ti mysql bash
+env
+mysql -u root -p12345678
+docker-compose down
+
+
+
 
 
 
