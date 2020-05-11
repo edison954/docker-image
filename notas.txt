@@ -619,4 +619,38 @@ PREFIJO EN EN LOS NOMBRES DE LOS RECURSOS CREADOS (RED,VOLUMENES)  -p proyecto
 docker-compose -p webtest  -f docker-compose-vol.yml up -d
 docker-compose -p webtest  -f docker-compose-vol.yml down
 
+INTALAR WORKPRESS EN DOCKER COMPOSE
 
+en volumen tambien para que tome la carpeta actual
+    volumes:
+      - "$PWD/html:/var/www/html"
+
+INSTALANDO WORDPRESS
+
+cd /d/_git/docker-images/docker-compose/apps/wp
+docker-compose up -d
+docker-compose logs -f
+
+---------------
+
+DOCKER REGESTRY
+servicio donde podemos subir y bajar IMAGENES
+docker registry documentation               -> google
+
+docker run -d -p 4000:5000 --name registry -v $PWD/data:/var/lib/registry  registry:2
+
+CREAR EL REGISTRY LOCAL
+docker run -d -p 4000:5000 --name registry -v d:\\_git\\docker-images\\docker-compose\\registry\\data:/var/lib/registry  registry:2
+
+docker pull hello-world
+docker tag hello-world:latest localhost:4000/hello-world
+docker images
+
+subir la imagen al registry
+docker push localhost:4000/hello-world
+
+eliminarlas
+docker rmi hello-world localhost:4000/hello-world
+
+bajarla nuevamente de nuestro registry
+docker pull localhost:4000/hello-world
