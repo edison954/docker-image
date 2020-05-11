@@ -425,8 +425,21 @@ docker info | grep -i root          --> ver la ruta de docker en el equipo
 /var/lib/docker  en windows es:
 C:\Users\Public\Documents\Hyper-V\Virtual hard disks
 
+ docker-compose down
 
+--CON VOLUMEN DE HOST
 
+version: "3"
+services:
+  web:
+    container_name: nginx2
+    ports:
+      - "8081:80"
+    volumes:
+      - "d:\\docker:/usr/share/nginx/html"
+    image: nginx
+volumes:
+  vol2:
 
 
 
