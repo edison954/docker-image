@@ -486,14 +486,43 @@ docker exec -ti nginx3 bash -c "ping nginx2"
 docker exec -ti nginx3 bash -c "ping web"
 
 
+CONSTRUIR IMAGENES EN DOCKER COMPOSE
+mkdir build
+Crear docker-compose.yml
+Crear Dockerfile
+
+version: "3"
+services:
+  web:
+    container_name: web
+    image: web-test
+    build: .
 
 
+docker-compose build
+docker images
+
+CUANDO EL DOCKERFILE SE LLAMA diferentes
+version: "3"
+services:
+  web:
+    container_name: web
+    image: web-test
+    build:
+      context: .                                -> carpeta
+      dockerfile: Dockerfile1                   -> nombre archivo
 
 
+mv Dockerfile Dockerfile1
 
+SOBREESCRIBIR EL CMD DE UN CONTENEDOR
 
+version: "3"
+services:
+  web:
+    image: centos
+    command: python -m SimpleHTTPServer 8080
+    ports:
+      - "8080:8080"
 
-
-
-
-
+ocker-compose -f docker-compose-cmd.yml up -d
