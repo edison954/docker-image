@@ -385,6 +385,25 @@ env
 mysql -u root -p12345678
 docker-compose down
 
+ENVIAR VARIABLE DE ENTORNO A UN ARCHIVO
+echo "MYSQL_ROOT_PASSWORD=12345678" > common.env
+cat common.env
+
+version: "3"
+services:
+  bd:
+    image: mysql:5.7
+    container_name: mysql
+    ports:
+      - "3306:3306"
+    env_file: common.env                --> archivo con las variables
+
+docker exec -ti mysql bash
+env
+
+
+
+
 
 
 
