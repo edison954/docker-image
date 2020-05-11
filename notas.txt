@@ -540,3 +540,72 @@ services:
 docker-compose -f docker-compose-memory.yml up -d
 docker stats nginx                                      -> ver recursos memoria y cpu
 
+POLITICA DE REINICIO DE LOS CONTENEDORES
+en google  docker restar policy
+restart: no 
+restart: always 
+restart: on-failure
+restart: unless.stopped 
+
+
+docker run -dti centos
+docker stop pensive_chaum
+
+
+version: "3"
+services:
+  test:
+    container_name: test
+    image: restart-image
+    build: .
+    restart: always
+
+
+En dockerfile:
+
+FROM centos
+
+COPY star.sh /star.sh
+
+RUN chmod +x /star.sh 
+
+CMD /star.sh
+
+
+en star.sh:
+
+#!bin/bash
+
+echo "Estoy vivo"
+sleep 5
+
+echo "Estoy detenido"
+
+---
+
+docker-compose build
+docker-compose up -d
+docker ps
+docker logs -f test
+
+watch -d docker ps
+
+
+
+restart: unless-stopped             en .yml  reinicia solo si no se detiene a mano
+docker-compose up -d
+docker ps
+docker stop test
+
+
+restart: on-failure                 en .yml  solo reinicia si se detuvo por un fallo
+docker-compose up -d
+
+en star.sh 
+exit 1
+
+docker-compose build
+docker-compose up -d
+docker ps
+
+watch -d docker ps
