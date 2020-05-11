@@ -441,12 +441,49 @@ services:
 volumes:
   vol2:
 
+--DOCKER NETWORK EN DOCKER COMPOSE
+version: "3"
+services:
+  web:
+    container_name: nginx2
+    ports:
+      - "8081:80"
+    volumes:
+      - "d:\\docker:/usr/share/nginx/html"
+    image: nginx
+    networks:
+      - net-test
+networks:
+  net-test:
 
 
+docker-compose -f docker-compose.yml up -d
+docker inspect nginx2
 
 
+--CON DOS CONTENEDORES
+version: "3"
+services:
+  web:
+    container_name: nginx2
+    ports:
+      - "8081:80"
+    image: httpd
+    networks:
+      - net-test
+  web2:
+    container_name: nginx3
+    ports:
+      - "8082:80"
+    image: httpd
+    networks:
+      - net-test
+networks:
+  net-test:
 
-
+docker-compose -f docker-compose.yml up -d
+docker exec -ti nginx3 bash -c "ping nginx2"
+docker exec -ti nginx3 bash -c "ping web"
 
 
 

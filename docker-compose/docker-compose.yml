@@ -4,8 +4,15 @@ services:
     container_name: nginx2
     ports:
       - "8081:80"
-    volumes:
-      - "d:\\docker:/usr/share/nginx/html"
-    image: nginx
-volumes:
-  vol2:
+    image: httpd
+    networks:
+      - net-test
+  web2:
+    container_name: nginx3
+    ports:
+      - "8082:80"
+    image: httpd
+    networks:
+      - net-test
+networks:
+  net-test:
