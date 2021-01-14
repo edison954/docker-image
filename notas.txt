@@ -663,3 +663,8 @@ docker push 192.168.1.53:4000/hello-world               --> no fucniona..
 blob del instructor
 https://learndevopsnow.wordpress.com/
 https://javiermartinalonso.github.io/drafts/dockers/2017-10-04-docker-Dockers-volumenes.html
+
+
+eliminar imagenes/contenedores no usados 
+
+docker system prune -a
