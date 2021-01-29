@@ -668,3 +668,4 @@ https://javiermartinalonso.github.io/drafts/dockers/2017-10-04-docker-Dockers-vo
 eliminar imagenes/contenedores no usados 
 
 docker system prune -a
+docker system prune -a -f
